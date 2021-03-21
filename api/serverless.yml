@@ -1,0 +1,71 @@
+service: wonkywheel-api
+app: wonkywheel
+org: talbotp
+
+frameworkVersion: "2"
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline
+
+custom:
+  domain: wonkywheel.com
+  apiDomain: api.${self:custom.domain}
+  wwwDomain: www.${self:custom.domain}
+  tableName: wonkywheel
+  serverless-offline:
+    httpPort: 3030
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: prod
+  region: us-east-1
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://${self:custom.wwwDomain}
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowedMethods:
+        - GET
+        - POST
+  environment: 
+    WONKYWHEEL_TABLE: ${self:custom.tableName}
+
+functions:
+  wonkyWheel:
+    handler: src/wonkyWheel.handler
+    events:
+      - httpApi:
+          path: /wonkywheel
+          method: GET
+
+  entryNew:
+    handler: src/entry.handler
+    events:
+      - httpApi:
+          path: /entry
+          method: POST
+  
+  resetLeaderboard:
+    handler: src/resetLeaderboard.handler
+    events: 
+      - schedule: 
+          rate: cron(0 6 * * MON)
+          enabled: true
+
+resources:
+  Resources:
+    wonkyWheelTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions: 
+          - AttributeName: username
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: username
+            KeyType: HASH
