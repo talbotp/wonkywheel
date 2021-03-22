@@ -4,10 +4,10 @@ This service is completely serverless running in us-east-1.
 
 ## Database (DynamoDB)
 
-| username      | standard                  | lastLeaderboard   | currentLeaderboard                     | 
-| ------------- |-------------              |-----------        |-----                           |
-| erobb221      | {closet: 20, noCam: 2}    | {makeup: 55}      | {noMic: 100, others:... }      |
-| ...           | ...                       | ...               |  ...                           |
+| username      | standard                  | lastLeaderboard   | currentLeaderboard             | top |
+| ------------- |-------------              |-----------        |-----                           | --- |
+| erobb221      | {closet: 20, noCam: 2}    | {makeup: 55}      | {noMic: 100, others:... }      | 3   |
+| ...           | ...                       | ...               |  ...                           | ... | 
 
 ## Endpoints
 

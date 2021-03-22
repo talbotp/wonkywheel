@@ -1,22 +1,37 @@
 'use strict';
 
-module.exports.handler = async (event) => {
+const { get } = require('./wonkyWheelTable');
 
-  // Get data from DynamoDB
+const convertEntries = dynamodbNumberMap => {
+  const map = {};
+  for (let key in dynamodbNumberMap) {
+    map[key] = dynamodbNumberMap[key].N;
+  }
+  return map;
+};
 
-  // return 
+module.exports.handler = async event => {
+  const username = event?.queryStringParameters?.username
+  if (username === undefined) {
+    console.log('Client Error: Missing username query string parameter.');
+    return { statusCode: 400, message: 'Missing username query string parameter.' };
+  }
+
+  const data = await get(username);
+  const standard = convertEntries(data.Item?.standard?.M);
+  const lastLeaderboard = convertEntries(data.Item?.lastLeaderboard?.M);
+  const currentLeaderboard = convertEntries(data.Item?.currentLeaderboard?.M);
+  const top = data.Item?.top?.N;
+
   return {
     statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
+    body: JSON.stringify({
+      username: username,
+      standard: standard,
+      lastLeaderboard: lastLeaderboard,
+      currentLeaderboard: currentLeaderboard,
+      top: top,
+    }, null, 2),
   };
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
 };

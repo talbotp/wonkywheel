@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports.handler = async (event) => {
+module.exports.handler = async event => {
 
   // Get data from dynamodb 
 

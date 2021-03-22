@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "local": "serverless offline start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^6.8.0"
   }
 }
