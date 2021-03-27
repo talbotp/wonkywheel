@@ -1,6 +1,5 @@
-'use strict';
-
-const { get } = require('./wonkyWheelTable');
+const get = require('lodash.get');
+const { getData } = require('./wonkyWheelTable');
 
 const convertEntries = dynamodbNumberMap => {
   const map = {};
@@ -11,16 +10,19 @@ const convertEntries = dynamodbNumberMap => {
 };
 
 module.exports.handler = async event => {
-  const username = event?.queryStringParameters?.username
+  const username = get(event, 'queryStringParameters.username');
   if (username === undefined) {
     console.log('Client Error: Missing username query string parameter.');
-    return { statusCode: 400, message: 'Missing username query string parameter.' };
+    return { 
+      statusCode: 400, 
+      message: 'Missing username query string parameter.' 
+    };
   }
 
-  const data = await get(username);
-  const standard = convertEntries(data.Item?.standard?.M);
-  const lastLeaderboard = convertEntries(data.Item?.lastLeaderboard?.M);
-  const currentLeaderboard = convertEntries(data.Item?.currentLeaderboard?.M);
+  const data = await getData(username);
+  const standard = convertEntries(get(data, 'Item.standard.M'));
+  const lastLeaderboard = convertEntries(get(data, 'Item.lastLeaderboard.M'));
+  const currentLeaderboard = convertEntries(get(data, 'Item.currentLeaderboard.M'));
   const top = data.Item?.top?.N;
 
   return {

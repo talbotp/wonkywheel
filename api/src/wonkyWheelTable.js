@@ -8,8 +8,7 @@ if (process.env.IS_OFFLINE) {
   var TABLE_NAME = process.env.WONKYWHEEL_TABLE;
 }
 
-const get = async username => {
-  console.log(TABLE_NAME);
+const getData = async username => {
   const params = {
     'TableName': TABLE_NAME,
     'Key': {
@@ -20,7 +19,7 @@ const get = async username => {
   return data;
 };
 
-const put = async item => {
+const putData = async item => {
   const params = {
     'TableName': TABLE_NAME,
     'Item': item
@@ -29,6 +28,6 @@ const put = async item => {
 };
 
 module.exports = {
-  get,
-  put,
+  getData,
+  putData,
 };
